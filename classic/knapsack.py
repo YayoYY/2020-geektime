@@ -29,15 +29,21 @@ def knapsack_dp(weights, values, capacity):
         如果搜索树中出现重复的状态，则可用动态规划求解（但有时自己使用的例子不会出现重复状态）。
         当一个问题确定可通过动态规划求解，之后的重点在于定义状态和状态转移矩阵（此状态与搜索树中的不同）。
     '''
+
     n = len(weights)
     dp = [[0 for j in range(capacity+1)] for i in range(n+1)]
+
     for i in range(1, n+1):
+
         weight = weights[i-1]
+
         for j in range(1, capacity+1):
+
             if weight > j:
                 dp[i][j] = dp[i-1][j]
             else:
                 dp[i][j] = max(dp[i-1][j], dp[i-1][j - weight] + values[i-1])
+
     return dp[-1][-1]
 
 if __name__ == "__main__":
