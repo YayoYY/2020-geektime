@@ -70,58 +70,6 @@ def rk_string_match(main, mode):
     return ans
 
 def bm_string_match(main, mode):
-
-    n, m, ans = len(main), len(mode), -1
-    # 坏字符的bc哈希表：存储模式串中每个字符最后出现的位置
-    bc = {}
-    for i in range(m-1, -1, -1):
-        if mode[i] not in bc:
-            bc[mode[i]] = i
-    # 好前缀的suffix哈希表：存储模式串中长度为i的每个后缀子串最后一次出现的下标
-    # 好前缀的prefix数组：存储模式串中每个后缀子串是否与前缀子串匹配
-    suffix, prefix = {}, {}
-    for i in range(1, m):
-        suffix_mode = mode[m-i:]
-        for j in range(i+1, m+1):
-            if mode[m-j:m-j+i] == suffix_mode:
-                suffix[i] = m-j
-                break
-        if mode[:i] == suffix_mode:
-            prefix[i] = True
-        else:
-            prefix[i] = False
-    prefix[m] = True
-
-    i = m-1
-    while i < n:
-        i_move = 0
-        for j in range(m-1, -1, -1): # 从后向前匹配
-            if main[i-(m-1-j)] != mode[j]:
-                # 计算坏字符规则下的移动位数
-                if main[i] in bc:
-                    i_1 = j - bc[main[i]]
-                else:
-                    i_1 = j + 1
-                # 如果有好后缀的话，计算好后缀下的移动位数
-                i_2 = 0
-                if m-1-j > 0:
-                    if m-1-j in suffix:
-                        i_2 = j + 1 - suffix[m-1-j]
-                    else:
-                        for k in range(j+1, m+1):
-                            if prefix[k]:
-                                i_2 = k
-                i_move = max(i_1, i_2)
-                break
-        if i_move == 0:
-            ans = i-m+1
-            break
-        else:
-            i += i_move
-
-    return ans
-
-def bm_string_match(main, mode):
     '''BM算法'''
 
     n, m, pos = len(main), len(mode), -1
