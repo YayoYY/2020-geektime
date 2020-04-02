@@ -10,6 +10,7 @@
     时间复杂度O(m)。
 
 3. BM算法(Boyer-Moore)：多滑动几位
+    从后向前比较模式串字符和主串字符
     坏字符原则：当匹配到坏字符的时候，向后滑动到坏字符最后一次在模式串中出现的位置。
               （利用'bc'哈希表存储模式串中字符最后一次出现的位置）
     好后缀原则：当有好后缀的时候，向后滑动到好后缀最后一次在模式串中出现的位置。
@@ -18,7 +19,16 @@
                 利用'prefix'哈希表存储长度为i的后缀子串是否有对应的前缀子串）
     综合坏字符和好后缀的移动位数，最大的是模式串滑动的位置。
 
-4. KMP算法(Knuth Morris Pratt)：
+4. KMP算法(Knuth Morris Pratt)：多滑动几位
+    从前向后比较模式串字符和主串字符
+    pnext数组保存了长度为j的模式串，前j-1位和主串匹配而第j位与主串不匹配时，模式串应该回溯的位置k。
+    pnext[j] = k，表示长度为j的字符串前缀子串与后缀子串（子串长度小于长长度）最长能匹配的位数。
+    eg. "abbcabcaabbcaa"，pnext = [-1, 0, 0, 0, 0, 1, 2, 0, 1, 1, 2, 3, 4, 5]
+    将j回溯到k能够保证前k-1位与模式串的后k-1位匹配，进而从第k位匹配即可。
+    eg. "abcabd"，当d不匹配时，此时j是5，next[5] = 2，进而从j=2即c开始匹配即可。
+    pnext数组的计算用动态规划的思想：
+    if s[j] == s[k]：pnext[j] = k，
+    if s[j] != s[k]：k = pnext[k]。直到k=-1时，k=0，pnext[j]=k（可匹配的长度为0）
 
 测试用例；
 main = "abcacabdc"
@@ -95,9 +105,9 @@ def bm_string_match(main, mode):
 
         for i in range(m-1, -1, -1):
 
-            l = m - i
+            l = m - i # 后缀子串长度
 
-            for j in range(i-1, -1, -1):
+            for j in range(i-1, -1, -1): # 从前一个字符开始比较
 
                 if mode[i:] == mode[j:j+l]:
                     suffix[l] = j
@@ -133,23 +143,60 @@ def bm_string_match(main, mode):
                     if l in suffix: # 如果mode中有好后缀
                         good_move = j + 1 - suffix[l] # 滑动到最后一次出现的位置
                     else: # 否则
-                        for k in range(l-1, -1, 1): # 看好后缀的子串是否为mode的前缀
+                        for k in range(l-1, -1, -1): # 看好后缀的子串是否为mode的前缀
                             if k in prefix:
                                 good_move = m - k # 有则移动到该位置
+                    if good_move == 0: # 好后缀在前面没出现过，模式串整个滑动到现在的右边
+                        good_move = m
 
                 i += max(bad_move, good_move)
                 match = False
                 break
 
         if match:
-            ans = i
+            pos = i
             break
 
-    return ans
+    return pos
 
 
 def kmp_string_match(main, mode):
-    pass
+    '''KMP算法'''
+
+    n, m, pos = len(main), len(mode), -1
+
+    def generate_pnext():
+        pnext = [-1] * m
+
+        j, k = 0, -1
+        while j < m - 1: # 只需计算前m-1个字符的pnext数组即可
+
+            if k == -1 or mode[j] == mode[k]:
+                j, k = j+1, k+1
+                pnext[j] = k
+
+            else:
+                k = pnext[k]
+
+        return pnext
+
+    pnext = generate_pnext()
+
+    i, j = 0, 0
+    while i < n and j < m:
+
+        if j == -1 or main[i] == mode[j]: # 当j==-1时，说明模式串开始从头开始匹配
+            i, j = i+1, j+1
+
+        else:
+            j = pnext[j]
+
+    if j == m: # 判断是否匹配到末尾
+        pos = i - m
+
+    return pos
+
+
 
 
 ans = bf_string_match("abcacabdc", "abd")
@@ -158,9 +205,8 @@ print("BF:", ans)
 ans = rk_string_match("abcacabdc", "abd")
 print("RK:", ans)
 
-ans = bm_string_match("abcacabdc", "abd")
+ans = bm_string_match("abcacabdc", "cbca")
 print("BM:", ans)
 
-ans = kmp_string_match("abcacabdc", "abd")
+ans = kmp_string_match("abcacabdc", "bbca")
 print("KMP:", ans)
-
