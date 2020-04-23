@@ -152,53 +152,53 @@ if __name__ == '__main__':
 
     '''DoubleLinkList'''
 
-    sll = DoubleLinkList()
-    print("Travel:", sll.travel())
-    print("Length:", sll.length())
+    dll = DoubleLinkList()
+    print("Travel:", dll.travel())
+    print("Length:", dll.length())
 
-    sll.append(1)
-    print("Append 1:", sll.travel())
-    print("Length:", sll.length())
+    dll.append(1)
+    print("Append 1:", dll.travel())
+    print("Length:", dll.length())
 
-    sll.append(2)
-    print("Append 2:", sll.travel())
+    dll.append(2)
+    print("Append 2:", dll.travel())
 
-    sll.add(3)
-    print("Add 3:", sll.travel())
+    dll.add(3)
+    print("Add 3:", dll.travel())
 
-    sll.insert(0, 4)
-    print("Insert (0, 4):", sll.travel())
+    dll.insert(0, 4)
+    print("Insert (0, 4):", dll.travel())
 
-    sll.insert(2, 5)
-    print("Insert (2, 5):", sll.travel())
+    dll.insert(2, 5)
+    print("Insert (2, 5):", dll.travel())
 
-    sll.insert(100, 6)
-    print("Insert (100, 6):", sll.travel())
-    print("Length:", sll.length())
+    dll.insert(100, 6)
+    print("Insert (100, 6):", dll.travel())
+    print("Length:", dll.length())
 
-    ans = sll.search(5)
+    ans = dll.search(5)
     print("Search 5:", ans)
 
-    sll.remove(3)
-    print("Remove 3:", sll.travel())
+    dll.remove(3)
+    print("Remove 3:", dll.travel())
 
-    sll.remove(6)
-    print("Remove 6:", sll.travel())
+    dll.remove(6)
+    print("Remove 6:", dll.travel())
 
-    sll.remove(3)
-    print("Remove 3:", sll.travel())
+    dll.remove(3)
+    print("Remove 3:", dll.travel())
 
-    sll.remove(7)
-    print("Remove 7:", sll.travel())
+    dll.remove(7)
+    print("Remove 7:", dll.travel())
 
-    sll.remove(4)
-    print("Remove 4:", sll.travel())
+    dll.remove(4)
+    print("Remove 4:", dll.travel())
 
-    sll.remove(5)
-    print("Remove 5:", sll.travel())
+    dll.remove(5)
+    print("Remove 5:", dll.travel())
 
-    sll.remove(2)
-    print("Remove 2:", sll.travel())
+    dll.remove(2)
+    print("Remove 2:", dll.travel())
 
-    sll.remove(1)
-    print("Remove 1:", sll.travel())
+    dll.remove(1)
+    print("Remove 1:", dll.travel())
