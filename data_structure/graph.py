@@ -71,6 +71,34 @@ class Graph_Matrix():
 
         return visited
 
+    def dijkstra(self, start):
+        '''单源最短路径：狄杰斯特拉算法'''
+
+        s, _s = [], list(range(self.__n)) # s:已计算完的节点集合 _s:未计算完的节点集合
+        d = [float("inf")] * self.__n # d:源点到各个顶点的最小距离
+        d[start] = 0 # 源点到自己的距离为0
+        while _s:
+
+            # 寻找当前没被计算的，最小距离的点
+            _ = float("inf")
+            for _i, _d in enumerate(d):
+                if _d < _ and _i not in s:
+                    i = _i
+                    _ = _d
+
+            s.append(i) # 添加到已计算的节点集合
+            _s.remove(i)# 从未计算的节点集合中删除
+
+            for j in range(self.__n):
+                # 对于当前已计算的节点i所连接的节点j，
+                # 如果（源点到i的距离+i到j的距离） 小于 （当前源点到j的距离），
+                # 更新源点到j的距离为（源点到i的距离+i到j的距离）
+                if self.__mat[i][j] != -1 and self.__mat[i][j] + d[i] < d[j]:
+                    d[j] = self.__mat[i][j] + d[i]
+
+        return d
+
+
 if __name__ == '__main__':
 
     graph = Graph_Matrix([[1, 0, 1, 1, 0, 0, 0],
@@ -89,3 +117,13 @@ if __name__ == '__main__':
 
     ans = graph.dfs_2()
     print("DFS2:", ans)  # 0 2 1 5 6 4 3
+
+    graph = Graph_Matrix([[-1, 2, -1, 1, -1, -1, -1],
+                          [-1, -1, -1, 3, 10, -1, -1],
+                          [4, -1, -1, -1, -1, 5, -1],
+                          [-1, -1, 2, -1, 2, 8, 4],
+                          [-1, -1, -1, -1, -1, -1, 6],
+                          [-1, -1, -1, -1, -1, -1, -1],
+                          [-1, -1, -1, -1, -1, 1, -1]]) # 图在笔记中
+    ans = graph.dijkstra(0)
+    print(ans)
